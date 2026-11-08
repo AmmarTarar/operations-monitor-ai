@@ -1,0 +1,18 @@
+
+# API keys and environment secrets
+.env
+.env.*
+!.env.example
+
+# Python temporary files
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# JavaScript dependencies
+node_modules/
+
+# Operating system files
+.DS_Store
+Thumbs.db
