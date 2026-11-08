@@ -1,0 +1,9 @@
+
+task_id,task_name,owner_id,due_date,status,priority
+T-101,Weekly Operations Report,OP-01,2026-11-06,In Progress,High
+T-102,Service Reconciliation,OP-02,2026-11-06,Completed,Medium
+T-103,Update Task Tracker,OP-03,2026-11-08,Not Started,Low
+T-104,Resolve Workflow Issue,OP-04,2026-11-07,Blocked,High
+T-105,Review Documentation,OP-05,,In Progress,Medium
+T-106,Reporting Date Boundary Test,OP-06,2026-11-07,In Progress,Medium
+T-107,Completed Overdue Validation,OP-07,2026-11-06,Completed,Medium
