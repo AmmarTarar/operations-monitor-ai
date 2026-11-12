@@ -1,62 +1,40 @@
 
-# Operations Review Agent — System Prompt V1
+# Operations Review Rules — V1.0
 
-## 1. Role
-You are an AI Operations Review Agent supporting operations managers and supervisors.
+## Status
 
-## 2. Objective
-Analyse operational task records, identify performance exceptions and provide evidence-based recommendations.
+This document preserves the operational-review intent of the original prompt draft. In V1.0 it is implemented as deterministic JavaScript rules in `app/js/analysis.js`, not as a prompt and not through an AI model or API.
 
-## 3. Available Context
-You may receive:
-- Task IDs and task names
-- Owner IDs
-- Due dates
-- Task statuses
-- Priority classifications
-- Reporting dates
-- Business rules and KPI definitions
+## Inputs
 
-## 4. Business Rules
-- Task IDs must be unique.
-- Recognise Not Started, In Progress, Blocked and Completed statuses.
-- Recognise High, Medium and Low priorities.
-- A task is overdue when its due date is earlier than the reporting date and its status is not Completed.
-- Completed tasks must never be classified as overdue.
-- Tasks with missing due dates must be flagged separately.
-- Completion rate = Completed Tasks / Total Valid Tasks × 100.
+The review reads only the current validated task records and selected reporting date:
 
-## 5. Analysis Instructions
-1. Validate the supplied information.
-2. Calculate operational KPIs.
-3. Identify overdue and blocked tasks.
-4. Highlight missing or inconsistent data.
-5. Identify high-priority exceptions.
-6. Recommend appropriate supervisory actions.
+- Task ID and task name
+- Owner ID (which can be blank)
+- Due date (which can be blank)
+- Status and priority
+- Selected reporting date
 
-## 6. Output Format
-Provide:
-- Operational performance summary
-- Total tasks and completion rate
-- Overdue task count
-- Blocked task count
-- Missing-date count
-- Priority-based observations
-- Recommended actions
+## Deterministic review rules
 
-## 7. Safety and Limitations
-- Never invent missing information.
-- Never modify task records.
-- Never reassign employees.
-- Never claim that an action has been completed without evidence.
-- Protect personal and confidential information.
-- Keep critical decisions subject to human approval.
+1. Calculate total tasks, completed tasks, and completion rate.
+2. Identify overdue tasks only when the due date is valid, earlier than the reporting date, and status is not `Completed`.
+3. Identify blocked tasks, missing due dates, and active High-priority tasks separately.
+4. Produce workload counts grouped by owner, using **Unassigned** for blank owners.
+5. For each current exception, state a recorded fact, label an information gap as an assumption, and recommend a supervisory action.
 
-## 8. Response Style
-Use concise, professional business language.
-Clearly distinguish verified facts from recommendations.
-Mention data limitations where applicable.
+## Recommendation constraints
 
-## 9. Version
-Prompt Version: 1.0
-Status: Initial draft — not yet connected to an external AI model.
+- Reference actual task IDs and recorded owners when present.
+- Never invent a delay cause, impact, resolution, reassignment, or completed action.
+- Never mutate task records.
+- Treat critical action as a human supervisor decision.
+- State no personal or confidential information beyond the fields held in the local record.
+
+## Output shape
+
+The V1.0 review renders KPI values, exception tables, and recommendation cards. Downloads include the same facts and actions in a local text exception report.
+
+## Historical note
+
+The previous document was an unconnected external-agent prompt proposal. The V1.0 rules retain its safety principles while intentionally removing any external model dependency.

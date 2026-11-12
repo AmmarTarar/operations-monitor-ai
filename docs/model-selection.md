@@ -1,46 +1,23 @@
 
-# Operations Monitor — AI Model Selection
+# Operations Monitor V1.0 — Model Selection Status
 
-## 1. Objective
-Evaluate suitable AI models for the future Operations Review Agent.
+## V1.0 decision
 
-## 2. Candidate Providers
+**No model is selected or used.** Operations Monitor V1.0 is deliberately dependency-free and fully offline. KPI calculations, exception classification, and supervisory recommendations are implemented through transparent local business rules.
 
-| Candidate | Provider | Purpose | Status |
-|---|---|---|---|
-| Gemini | Google | Agent reasoning and tool integration | Not tested |
-| OpenAI models | OpenAI | Agent reasoning and tool integration | Not tested |
+This decision satisfies the current deployment constraints: no paid API, subscription, cloud service, external model dependency, or task data transfer outside the browser.
 
-## 3. Evaluation Criteria
+## What replaces a model in V1.0
 
-- Quality and accuracy of operational analysis.
-- Tool calling and function integration.
-- Structured output support.
-- Context handling and document retrieval.
-- Response latency.
-- API pricing and usage limits.
-- Security and data handling.
+`app/js/analysis.js` provides deterministic handling for:
 
-## 4. Planned Test Scenarios
+- task counts and two-decimal completion rate;
+- overdue, blocked, missing-date, and High-priority exceptions;
+- owner workload aggregation; and
+- fact/assumption/action supervisory recommendations tied to task IDs.
 
-1. Identify overdue and blocked tasks.
-2. Summarise operational performance.
-3. Interpret operational SOPs.
-4. Recommend task priorities.
-5. Handle missing or conflicting information.
+The behaviour is covered by Node-based automated tests and can be inspected directly in source code.
 
-## 5. Prompt Experimentation
+## Historical note and future boundary
 
-Test system instructions, role definitions, business rules and example-based prompting.
-
-Record each prompt version and its observed results.
-
-## 6. Model Selection Decision
-
-Final model: Pending evaluation.
-
-Reason for selection: To be documented after practical testing.
-
-## 7. Current Status
-
-No external AI model has yet been integrated into the Operations Monitor prototype. Model evaluation and integration are planned.
+Earlier drafts named Gemini and OpenAI candidates for a possible future agent. They were never integrated into the V1.0 application and are out of scope for this release. Any future model evaluation would require separate approval for cost, data handling, offline operation, security, accuracy, human oversight, and a revised architecture. It must not be inferred from this document or V1.0 code.

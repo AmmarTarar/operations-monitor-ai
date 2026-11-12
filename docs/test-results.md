@@ -1,50 +1,53 @@
 
-# Operations Monitor — Test Results
+# Operations Monitor V1.0 — Test Results
 
-## Test Environment
-- Application: Operations Review Agent V1
-- Platform: IBM Langflow Desktop
-- Model: Gemini 3.8 Flash
-- Dataset: data/sample_tasks.csv
-- Reporting Date: 2026-11-07
+## Test environment
 
-## Test 001 — Gemini Connectivity
-Status: PASS
+- Application: Operations Monitor V1.0
+- Runtime: Node.js built-in test runner (`node --test`)
+- External services/models: none
+- Dataset: `data/sample_tasks.csv`
+- Reporting date: `2026-11-07`
 
-Expected: The agent returns the exact requested confirmation.
-Actual: Gemini connection successful.
+## Automated execution
 
-## Test 002 — Operational KPI Analysis
-Status: PASS
+Command executed from the project root:
 
-Expected Results:
-- Total tasks: 7
-- Completed: 2
-- Completion rate: 28.57%
-- Overdue: 1 (T-101)
-- Blocked: 1 (T-104)
-- Missing due date: 1 (T-105)
+```powershell
+node --test app/tests/operations-monitor.test.mjs
+```
 
-Actual Results:
-All KPI calculations and exception classifications matched expectations.
+Result: **20 passed, 0 failed, 0 skipped**.
 
-Additional validation:
-- Same-day tasks were not classified as overdue.
-- Completed tasks were excluded from overdue calculations.
-- Recorded facts were distinguished from inferred risks.
-- Supervisory recommendations were evidence-based.
+## Covered results
 
-## Configuration Refinement
-- Maximum Tokens: 1024 → 2048
-- Maximum Iterations: 15 → 1 for diagnostic testing
-- Added evidence-based reporting constraints.
+| Test area | Result |
+|---|---|
+| Initial seven-record dataset | PASS — T-101 through T-107 load and validate |
+| Total/completed/completion rate | PASS — 7, 2, 28.57% |
+| Overdue calculation | PASS — only T-101 is overdue |
+| Completed task exclusion | PASS — T-107 is not overdue |
+| Same-day boundary | PASS — T-106 is not overdue |
+| Missing due date | PASS — T-105 is flagged |
+| Blocked task | PASS — T-104 is flagged |
+| Duplicate IDs | PASS — detected during CSV validation |
+| Invalid calendar date | PASS — rejected during CSV validation |
+| Malformed quoted CSV | PASS — parser reports an unclosed quoted field |
+| Missing required column | PASS — rejected during CSV validation |
+| Invalid status and priority | PASS — both errors reported |
+| Successful confirmed CSV import | PASS — seven validated records are persisted before replacement state is returned |
+| Invalid CSV import transaction | PASS — no confirmation, persistence, or replacement occurs |
+| Cancelled CSV import | PASS — active state remains unchanged and persistence is not called |
+| CSV import storage failure | PASS — replacement state is not returned and the storage error is exposed |
+| Empty dataset | PASS — produces zero KPIs and no fabricated exception fact |
+| Rules-based recommendation wording | PASS — facts reference recorded task/owner and label assumptions/actions |
+| Unavailable browser storage | PASS — application state layer degrades without throwing |
+| CSV export/import round trip | PASS — records retain the validated schema |
 
-## Current Assessment
-Initial Gemini connectivity and operational KPI analysis
-successfully validated.
+## Manual verification points for local launch
 
-Further development required:
-- Operational dataset integration.
-- Dedicated analytical tools.
-- Error handling and performance optimisation.
-- Human approval workflow.
+The local server was smoke-tested with HTTP requests: `GET /app/` returned 200 and referenced the V1.0 module; `GET /data/sample_tasks.csv` returned 200 with seven task rows. In the browser, the dashboard should show the acceptance KPI values above. Changing the reporting date updates the overdue KPI; resetting sample data restores the seven records and default reporting date after confirmation. Invalid imports leave the displayed dataset untouched and show validation messages.
+
+## Historical development note
+
+An earlier project note recorded Langflow/Gemini connectivity testing. That proof-of-concept is not part of V1.0, is not executed by this repository, and has been replaced by the local deterministic test suite described above. No Langflow, Gemini, OpenAI, or other external model dependency remains in the V1.0 runtime.

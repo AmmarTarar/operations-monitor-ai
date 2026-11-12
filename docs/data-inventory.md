@@ -1,52 +1,40 @@
 
-# Operations Monitor — Data & Knowledge Sources Inventory
+# Operations Monitor V1.0 — Data Inventory
 
-## 1. Purpose
-Identify the structured data and business knowledge required by the Operations Monitor and its planned AI Operations Review Agent.
+## Purpose
 
-## 2. Data Sources Inventory
+Document the data used by the offline V1.0 application and the controls applied before a record can influence KPIs, exceptions, workload, or recommendations.
 
-| Source | Type | Owner / License | Format | Size | Update Frequency | Access Method | Preprocessing | PII / Sensitive | Status |
-|---|---|---|---|---|---|---|---|---|---|
-| Synthetic task records | Structured | Project-created | Manual / Table | Small | Per task entry | Application inputs | Validation and cleaning | No real PII | Test examples available |
-| Business requirements | Documentation | Project owner | Markdown | Small | As revised | GitHub repository | None | No | Available |
-| KPI definitions | Business rules | Project owner | Markdown | Small | As revised | Business requirements document | Rule verification | No | Available |
-| Architecture document | Technical documentation | Project owner | Markdown | Small | As revised | GitHub repository | None | No | Available |
-| Operational SOPs | Business knowledge | Project-created | Planned PDF / Markdown | Not prepared | As revised | Future document retrieval | Chunking and review | No real PII | Planned |
-| Task database | Structured | Project-created | Planned SQLite database | Not prepared | As records change | Future controlled SQL tools | Schema validation | Synthetic data only | Planned |
+## Current data sources
 
-## 3. Data Preparation Principles
+| Source | Type | Owner / license | Format | Access | Processing | Sensitivity | V1.0 status |
+|---|---|---|---|---|---|---|---|
+| `data/sample_tasks.csv` | Structured synthetic task data | Project-created | CSV | Local project file | CSV parse and record validation | No real PII | Canonical initial dataset |
+| User-imported task CSV | Structured task data | User-controlled | CSV | Local browser file picker | Full-file validation before replacement | Must be assessed by user | Supported |
+| Manual task entry | Structured task data | User-controlled | Browser form | Local browser | Field validation before insertion | Must be assessed by user | Supported |
+| Browser local storage | Application state | Browser user | JSON | Same browser origin | Saved after accepted data changes | Local to browser profile | Supported when available |
+| Business rules | Documentation | Project owner | Markdown/JavaScript | Local project files | Implemented deterministically | No | Supported |
 
-- Use synthetic operational records for demonstrations.
-- Validate task IDs, dates, status and priority.
-- Avoid confidential company records and employee personal information.
-- Keep business rules consistent across application logic and AI instructions.
-- Document data ownership and usage permissions.
-- Verify source accuracy before using documents for RAG.
+## Canonical sample dataset
 
-## 4. Future RAG Preparation Checklist
+`data/sample_tasks.csv` contains seven synthetic records: T-101 through T-107. With the default reporting date of `2026-11-07`, its expected results are 7 total tasks, 2 completed tasks, 28.57% completion, 1 overdue task, 1 blocked task, and 1 missing due date.
 
-- [ ] Operational SOP corpus assembled.
-- [ ] Document ownership and usage permissions confirmed.
-- [ ] Chunking strategy defined.
-- [ ] Embedding model selected.
-- [ ] Vector store selected.
-- [ ] Retrieval and citation strategy tested.
-- [ ] Sensitive information removed.
+The runtime attempts to load this canonical file first. A built-in, matching fallback exists solely so the interface remains usable in browsers that block local `file://` fetches; the recommended local HTTP launch route loads the CSV source file itself.
 
-## 5. Future Structured Data Preparation
+## Validation and handling rules
 
-- [ ] Task database schema defined.
-- [ ] Synthetic task dataset prepared.
-- [ ] SQL read-only access configured.
-- [ ] Query validation implemented.
-- [ ] Output limits established.
-- [ ] Tool calls logged and tested.
+- Import requires all six headers: `task_id`, `task_name`, `owner_id`, `due_date`, `status`, and `priority`.
+- The import parser supports quoted CSV fields and reports malformed quoting, missing headers, wrong row widths, invalid dates, invalid values, missing task IDs/names, and duplicate task IDs.
+- Blank due dates are retained and flagged. Blank owners are retained and shown as **Unassigned**.
+- If any import issue is found, the current dataset remains unchanged. The interface exposes the complete validation list rather than silently omitting records.
+- Exported CSV uses the same six-column schema and quoting rules.
 
-## 6. Current Assessment
+## Data protection guidance
 
-The project currently has an HTML/JavaScript prototype, documented business requirements and an initial architecture.
+- The supplied dataset is synthetic and contains no real personal information.
+- V1.0 has no authentication, encryption layer, server, or shared database. Do not import confidential production data without an approved local data-handling process.
+- Recommendations only operate on the fields present in the task dataset. They do not retrieve documents, inspect external data, or infer factual causes.
 
-The prototype uses client-side task data. A persistent database, operational SOP corpus, RAG pipeline and external AI integrations have not yet been implemented.
+## Deferred sources
 
-These will be developed and evaluated in subsequent challenge stages.
+Operational SOPs, databases, retrieval indexes, SQL tools, and external models are not V1.0 data sources. They are deliberately excluded to preserve the fully offline, no-subscription architecture. Any later integration requires a new security, data ownership, and architecture review.

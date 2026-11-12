@@ -1,0 +1,11 @@
+{
+  "name": "operations-monitor-v1",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Offline, dependency-free operations monitoring application",
+  "type": "module",
+  "scripts": {
+    "start": "node app/serve.mjs",
+    "test": "node --test app/tests/*.test.mjs"
+  }
+}

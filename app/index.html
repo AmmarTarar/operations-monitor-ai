@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Offline task monitoring, exception reporting, and workload analysis.">
+  <title>Operations Monitor V1.0</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#dashboard">Skip to dashboard</a>
+  <header class="app-header">
+    <div>
+      <p class="eyebrow">Offline business operations monitoring</p>
+      <h1>Operations Monitor <span>V1.0</span></h1>
+      <p class="subtitle">Local task oversight, consistent exception rules, and evidence-based supervisory recommendations.</p>
+    </div>
+    <div class="report-date-control">
+      <label for="reporting-date">Reporting date</label>
+      <input id="reporting-date" type="date" value="2026-11-07">
+    </div>
+  </header>
+
+  <main>
+    <p id="app-notice" class="notice notice-info" role="status" aria-live="polite">Loading sample data…</p>
+
+    <section class="toolbar panel" aria-labelledby="data-heading">
+      <div>
+        <p class="eyebrow">Data controls</p>
+        <h2 id="data-heading">Manage task data</h2>
+        <p id="task-count-label" class="muted">0 tasks in current dataset</p>
+      </div>
+      <div class="toolbar-actions">
+        <label class="file-button" for="csv-upload">Import and replace CSV</label>
+        <input id="csv-upload" type="file" accept=".csv,text/csv" aria-describedby="import-help">
+        <button id="export-csv" type="button" class="button-secondary">Export CSV</button>
+        <button id="export-report" type="button" class="button-secondary">Download exception report</button>
+        <button id="reset-sample" type="button" class="button-secondary">Reset to sample data</button>
+        <button id="clear-tasks" type="button" class="button-danger">Clear all tasks</button>
+      </div>
+      <p id="import-help" class="control-help">Import validates every record before replacing the current dataset. Required CSV columns: task_id, task_name, owner_id, due_date, status, priority.</p>
+      <div id="validation-errors" aria-live="assertive"></div>
+    </section>
+
+    <section id="dashboard" aria-labelledby="dashboard-heading">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">KPI dashboard</p>
+          <h2 id="dashboard-heading">Current operational position</h2>
+        </div>
+      </div>
+      <div class="kpi-grid">
+        <article class="kpi-card"><p>Total tasks</p><strong id="kpi-total">0</strong></article>
+        <article class="kpi-card"><p>Completed tasks</p><strong id="kpi-completed">0</strong></article>
+        <article class="kpi-card"><p>Completion rate</p><strong id="kpi-completion-rate">0.00%</strong></article>
+        <article class="kpi-card kpi-alert"><p>Overdue tasks</p><strong id="kpi-overdue">0</strong></article>
+        <article class="kpi-card kpi-alert"><p>Blocked tasks</p><strong id="kpi-blocked">0</strong></article>
+        <article class="kpi-card kpi-alert"><p>Missing due dates</p><strong id="kpi-missing-due-date">0</strong></article>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="add-heading">
+      <div class="section-heading">
+        <div><p class="eyebrow">Manual entry</p><h2 id="add-heading">Add a task</h2></div>
+        <p class="muted">A blank due date is allowed and will be flagged for review.</p>
+      </div>
+      <form id="task-form" class="task-form" novalidate>
+        <label>Task ID<input name="task_id" required autocomplete="off" placeholder="e.g. T-108"></label>
+        <label>Task name<input name="task_name" required autocomplete="off"></label>
+        <label>Owner ID<input name="owner_id" autocomplete="off" placeholder="Optional"></label>
+        <label>Due date<input name="due_date" type="date"></label>
+        <label>Status<select name="status" required><option value="">Select status</option><option>Not Started</option><option>In Progress</option><option>Blocked</option><option>Completed</option></select></label>
+        <label>Priority<select name="priority" required><option value="">Select priority</option><option>High</option><option>Medium</option><option>Low</option></select></label>
+        <button type="submit" class="button-primary">Add task</button>
+      </form>
+    </section>
+
+    <section class="panel" aria-labelledby="task-table-heading">
+      <div class="section-heading"><div><p class="eyebrow">Task register</p><h2 id="task-table-heading">All task records</h2></div></div>
+      <div id="all-tasks"></div>
+    </section>
+
+    <section aria-labelledby="exceptions-heading">
+      <div class="section-heading"><div><p class="eyebrow">Exception monitoring</p><h2 id="exceptions-heading">Assignments requiring attention</h2></div></div>
+      <div class="exception-grid">
+        <article class="panel exception-panel"><h3>Overdue assignments</h3><div id="exception-overdue"></div></article>
+        <article class="panel exception-panel"><h3>Blocked tasks</h3><div id="exception-blocked"></div></article>
+        <article class="panel exception-panel"><h3>Missing due dates</h3><div id="exception-missing-date"></div></article>
+        <article class="panel exception-panel"><h3>High-priority exceptions</h3><div id="exception-high-priority"></div></article>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="workload-heading">
+      <div class="section-heading"><div><p class="eyebrow">Workload analysis</p><h2 id="workload-heading">Assignments by owner</h2></div></div>
+      <div id="workload-table"></div>
+    </section>
+
+    <section class="panel review-panel" aria-labelledby="review-heading">
+      <div class="section-heading"><div><p class="eyebrow">Rules-based operations review</p><h2 id="review-heading">Supervisory recommendations</h2></div></div>
+      <p class="muted">These recommendations are generated from recorded task fields and do not infer unrecorded causes or outcomes.</p>
+      <div id="recommendations"></div>
+    </section>
+  </main>
+  <footer>Operations Monitor V1.0 works locally and uses no cloud service, paid API, or external model.</footer>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
