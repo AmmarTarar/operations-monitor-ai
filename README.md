@@ -68,3 +68,8 @@ The original baseline prototype remains at [app/operations-monitor-baseline.html
 
 Ammar Ahmad
 Project direction: Operations Improvement and Business Intelligence.
+## DDS Challenge Submission Evidence
+
+Supporting Day 6 progress documentation, Day 7 evaluation dataset/results, and the Day 8 community article are available in [`docs/challenge-submission/`](docs/challenge-submission/README.md).
+
+The evidence folder documents the delivered V1.0 scope and known limitations. Operations Monitor V1.0 is a local, offline, rules-based application; it does not call a live LLM/API at runtime. See the evidence README for run instructions, recorded tests, and future production requirements.
